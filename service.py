@@ -59,7 +59,7 @@ def fuel_to_float(x: str) -> List[float]:
     }
     res_arr = np.zeros(len(dict_val))
     try:
-        idx = res_arr[x]
+        idx = dict_val[x]
         res_arr[idx] = 1
         return res_arr.tolist()
     except Exception:
@@ -73,7 +73,7 @@ def seller_type_to_float(x: str) -> List[float]:
     }
     res_arr = np.zeros(len(dict_val))
     try:
-        idx = res_arr[x]
+        idx = dict_val[x]
         res_arr[idx] = 1
         return res_arr.tolist()
     except Exception:
@@ -86,7 +86,7 @@ def transmission_to_float(x: str) -> List[float]:
     }
     res_arr = np.zeros(len(dict_val))
     try:
-        idx = res_arr[x]
+        idx = dict_val[x]
         res_arr[idx] = 1
         return res_arr.tolist()
     except Exception:
@@ -102,7 +102,7 @@ def owner_to_float(x: str) -> List[float]:
     }
     res_arr = np.zeros(len(dict_val))
     try:
-        idx = res_arr[x]
+        idx = dict_val[x]
         res_arr[idx] = 1
         return res_arr.tolist()
     except Exception:
@@ -123,7 +123,7 @@ def seats_to_float(x: str) -> List[float]:
     }
     res_arr = np.zeros(len(dict_val))
     try:
-        idx = res_arr[x]
+        idx = dict_val[x]
         res_arr[idx] = 1
         return res_arr.tolist()
     except Exception:
@@ -159,11 +159,13 @@ def proccess_input(item: Item) -> list:
 
 @app.post("/predict_item")
 def predict_item(item: Item) -> float:
-    # надо полученные значения предобработать определенным образом
-    # при чем у категориальных и числовых фичей необходимо сохранить порядок, который был
-    # при обучении
 
     curr_input = np.array([proccess_input(item)])
+
+    print()
+    print(curr_input)
+    print()
+
     pred = model.predict(curr_input)[0]
 
     return np.exp(pred) - 1
@@ -171,9 +173,7 @@ def predict_item(item: Item) -> float:
 
 @app.post("/predict_items")
 def predict_items(items: List[Item]) -> List[float]:
-    print()
-    print(111111)
-    print()
+    
     inputs_lst = np.array([proccess_input(item) for item in items])
 
     return [item[0] for item in (np.exp(model.predict(inputs_lst)) - 1).tolist()]
